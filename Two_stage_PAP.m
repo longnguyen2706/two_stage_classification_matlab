@@ -90,19 +90,21 @@ for ii = 1:nRounds
    
     total_label = total_label_s1;
     
-    acc1 = length(find(stage1_predict_ts == total_label(ts_idx)))/length(total_label(ts_idx));
-    fprintf('Stage 1 Round: %d, Accuracy: %.4f\n', ii, acc1);
+    acc_s1 = length(find(stage1_predict_ts == total_label(ts_idx)))/length(total_label(ts_idx));
+    fprintf('Stage 1 Round: %d, Accuracy: %.4f\n', ii, acc_s1);
     
     
     [stage2_predict_ts, stage2_predict_reject] = Stage2_Classification(total_data_s2, total_label_s2, tr_idx, ts_idx, reject_index);
-    acc2 = length(find(stage2_predict_ts == total_label(ts_idx)))/length(total_label(ts_idx));
-    fprintf('Stage 2 Round: %d, Accuracy: %.4f\n', ii, acc2);
+    acc_s2 = length(find(stage2_predict_ts == total_label(ts_idx)))/length(total_label(ts_idx));
+    fprintf('Stage 2 Round: %d, Accuracy: %.4f\n', ii, acc_s2);
     
-    
-    
+    two_stage_predict_ts = stage1_predict_ts;
+    for i = 1:length(reject_index)
+        two_stage_predict_ts(reject_index(i)) = stage2_predict_ts(reject_index(i));
+    end 
+    two_stage_acc = length(find(two_stage_predict_ts == total_label(ts_idx)))/length(total_label(ts_idx));
+    fprintf('2 stage Round: %d, Accuracy: %.4f\n', ii, two_stage_acc);
 %     acc_all = [acc_all; acc]; % Record each round of the results of Stage 1 on all the test samples
 end
-
-pause;
 
 

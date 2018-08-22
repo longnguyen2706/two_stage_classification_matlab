@@ -34,7 +34,7 @@ end
 [total_data_s2, total_label_s2, nclass_s2, clabel_s2, fdatabase_s2] = load_cnn_features(database, cnn_fea_dir);
 
 fprintf ('nclass1, nclass2 %d %d \n', nclass_s1, nclass_s2);
-fprintf ('is total label 
+%fprintf ('is total label 2 stage equal %s \n', isequal(total_label_s1, total_label_s2));
 
 acc_all = [];
 
@@ -90,15 +90,19 @@ for ii = 1:nRounds
    
     total_label = total_label_s1;
     
-    acc1 = length(find(stage1_predict_ts == total_label(ts_idx)))/length(total_label(ts_idx));
-    fprintf('Stage 1 Round: %d, Accuracy: %.4f\n', ii, acc1);
+    acc_s1 = length(find(stage1_predict_ts == total_label(ts_idx)))/length(total_label(ts_idx));
+    fprintf('Stage 1 Round: %d, Accuracy: %.4f\n', ii, acc_s1);
     
     
     [stage2_predict_ts, stage2_predict_reject] = Stage2_Classification(total_data_s2, total_label_s2, tr_idx, ts_idx, reject_index);
-    acc2 = length(find(stage2_predict_ts == total_label(ts_idx)))/length(total_label(ts_idx));
-    fprintf('Stage 2 Round: %d, Accuracy: %.4f\n', ii, acc2);
+    acc_s2 = length(find(stage2_predict_ts == total_label(ts_idx)))/length(total_label(ts_idx));
+    fprintf('Stage 2 Round: %d, Accuracy: %.4f\n', ii, acc_s2);
     
-    
+    two_stage_predict_ts = stage1_predict_ts;
+    for i = 1:length(reject_index)
+        two_stage_predict_ts(i) = stage2_predict_ts(i);
+    end 
+    two_st fprintf('Stage 2 Round: %d, Accuracy: %.4f\n', ii, acc_s2);age_acc = length(find(two_stage_predict_ts == total_label(ts_idx)))/length(total_label(ts_idx));
     
 %     acc_all = [acc_all; acc]; % Record each round of the results of Stage 1 on all the test samples
 end
