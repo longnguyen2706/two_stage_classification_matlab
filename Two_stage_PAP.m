@@ -6,7 +6,7 @@ validation_ratio = 0.25;
 
 
 tr_ratio = 0.8;                     % Training image ratio, e.g., 80%
- rejectionRate_thr = 0.2;
+ rejectionRate_thr = 0.1;
     
 genFeature = false;                % True: Build BoW model from SIFT features; False: Load saved BoW model;
 genData = false;                   % True: Need to fetch saved BoW features from folders. False: use the saved .mat file to read BoW features. 
