@@ -1,0 +1,7 @@
+data/
+dictionary/
+features/
+generated_features/
+image/
+liblinear-2.1/
+*.mat
