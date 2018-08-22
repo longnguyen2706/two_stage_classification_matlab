@@ -9,7 +9,7 @@ nclass = length(unique(total_label));
 
 %**********************************
 ts_data = total_data(ts_idx,:);
-ts_label = total_data(ts_idx, :);
+ts_label = total_label(ts_idx, :);
 tr_data = total_data(tr_idx,:);
 tr_label = total_label(tr_idx,:);
     
@@ -17,7 +17,7 @@ options = ['-C -s 2'];
 model2 = train(double(tr_label), sparse(tr_data), options);
 options = ['-c ',num2str(model2(1)),' -s 2'];
 model2 = train(double(tr_label), sparse(tr_data), options);
-[label] = predict(ts_label, sparse(ts_data), model2);
+[stage2_predict_ts] = predict(ts_label, sparse(ts_data), model2);
 
 reject_data = [];
 reject_label = [];

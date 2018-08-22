@@ -127,7 +127,7 @@ for ii = 1:nRounds
     fprintf('Testing number:%d\n', length(ts_idx));
     
     %****************************************************
-    [t_opt, SVM_model] = Build_RO_SVM(total_data,total_label,tr_idx); % Expected Rejection rate is 0.1 by default, can be set within this function (var: rejectionRate_thr)
+    [t_opt, SVM_model] = Build_RO_SVM(tr_data, tr_label, tr_without_v_data, tr_without_v_label, v_data, v_label, rejectionRate_thr); % Expected Rejection rate is 0.1 by default, can be set within this function (var: rejectionRate_thr)
     [reject_index,stage1_predict_label] = Stage1_Classification(t_opt,SVM_model,total_data,total_label,tr_idx,ts_idx);
    
     acc1 = length(find(stage1_predict_label == total_label(ts_idx)))/length(total_label(ts_idx));

@@ -1,13 +1,10 @@
 % SIFT + BoW + RO-SVM Script
 
 clear all;close all;clc;
-
-pyramid = [1,2,4];                % spatial block structure for the SPM
-knn = 5;                          % # of visual words for each LLC coding 
 nRounds = 1;                     % # of experiments
 
-NoFeature = false;                % True: Build BoW model from SIFT features; False: Load saved BoW model;
-NoData = false;                   % True: Need to fetch saved BoW features from folders. False: use the saved .mat file to read BoW features. 
+NoFeature = true;                % True: Build BoW model from SIFT features; False: Load saved BoW model;
+NoData = true;                   % True: Need to fetch saved BoW features from folders. False: use the saved .mat file to read BoW features. 
 
 %*******SVM?Package? Liblinear *********************
 
@@ -17,88 +14,22 @@ addpath('liblinear-2.1\liblinear-2.1\matlab');
 
 img_dir = 'image/PAP';       % directory for the image database                             
 data_dir = 'data/PAP';       % directory for saving SIFT descriptors
-fea_dir = 'features/PAP';    % directory for saving BoW features
-
+bow_fea_dir = 'gen_feature_matlab/bow/PAP';    % directory for saving BoW features
+cnn_fea_dir = 'gen_feature_matlab/cnn/PAP';
 % retrieve the directory of the database and load the codebook
 database = retr_database_dir(data_dir);
 
-if isempty(database),
+if isempty(database)
     error('Data directory error!');
 end
 
-%******Load a BoW dictionary**********************
-Bpath = ['dictionary/dictionary_1000_PAP.mat'];
-load(Bpath);
-B = dictionary';
-nCodebook = size(B, 2);     
+%****************************************
 
+[total_data_s1, total_label_s1, nclass_s1, fdatabase_bow] = load_bow_features(database, bow_fea_dir, false, false);
+[total_data_s2, total_label_s2, nclass_s2, fdatabase_cnn] = load_cnn_features(database, cnn_fea_dir);
 
-dFea = sum(nCodebook*pyramid.^2);   %dimensionality of BoW features
-nFea = length(database.path);       % Number of images
+fprintf ('nclass1, nclass2 %d %d', nclass_s1, nclass_s2);
 
-%*********BoW feature building************************
-
-fdatabase = struct;
-fdatabase.path = cell(nFea, 1);         % path for each image feature
-fdatabase.label = zeros(nFea, 1);       % class label for each image feature
-
-if(NoFeature) % True: Build BoW model from SIFT features; False: Load saved BoW model;
-
-for iter1 = 1:nFea  
-    if ~mod(iter1, 5),
-       fprintf('.');
-    end
-    if ~mod(iter1, 100),
-        fprintf(' %d images processed\n', iter1);
-    end
-    fpath = database.path{iter1};
-    flabel = database.label(iter1);
-    
-    load(fpath);
-    [rtpath, fname] = fileparts(fpath);
-    feaPath = fullfile(fea_dir, num2str(flabel), [fname '.mat']);
-    
- 
-    fea = LLC_pooling(feaSet, B, pyramid, knn);
-    label = database.label(iter1);
-
-    if ~isdir(fullfile(fea_dir, num2str(flabel))),
-        mkdir(fullfile(fea_dir, num2str(flabel)));
-    end      
-    save(feaPath, 'fea', 'label');
-  
-    fdatabase.label(iter1) = flabel;
-    fdatabase.path{iter1} = feaPath;
-end
-
-save('FeaInfo_PAP.mat','fdatabase','fdatabase');
-else
-    load('FeaInfo_PAP.mat');
-end
-
-clabel = unique(fdatabase.label);   % Class labels
-nclass = length(clabel);            % # of classes
-%**************Start experiments**************************
-if (NoData)  % True: Need to fetch saved BoW features from folders. False: use the saved .mat file to read BoW features. 
-        
-        total_data = [];
-        total_label = [];
-
-        for jj = 1:nclass,
-            idx_label = find(fdatabase.label == clabel(jj));
-
-            for kk = 1:length(idx_label)
-                fpath = fdatabase.path{idx_label(kk)};
-                load(fpath);
-                total_data = [total_data; fea'];
-                total_label = [total_label;label];
-            end
-        end
-       
-        save ('PAP_data.mat','total_data','total_label');
-    else
-        load ('PAP_data.mat');
-end
 
 
 tr_ratio = 0.8;                     % Training image ratio, e.g., 80%
@@ -126,14 +57,10 @@ for ii = 1:nRounds
     fprintf('Training number: %d\n', length(tr_idx));
     fprintf('Testing number:%d\n', length(ts_idx));
     
-    %*************************%********Parameters************
+    %*************************%********Train/test/val split************
     validation_ratio = 0.25;
-    nclass = length(unique(total_label));
     
-
-    %****************************
-
-    %********training data*****************
+    
     ts_data = total_data(ts_idx,:);
     ts_label = total_data(ts_idx,:);
     
@@ -162,16 +89,18 @@ for ii = 1:nRounds
      v_data = tr_data(v_idx,:);
      v_label = tr_label(v_idx,:);
     %***************************
+
     rejectionRate_thr = 0.2;
     
-    [t_opt, SVM_model] = Build_RO_SVM(tr_data, tr_label, tr_without_v_data, tr_without_v_label, v_data, v_label, rejectionRate_thr); % Expected Rejection rate is 0.1 by default, can be set within this function (var: rejectionRate_thr)
-    [reject_index,stage1_predict_label] = Stage1_Classification(t_opt,SVM_model,tr_data, tr_label, ts_data, ts_label);
+    [t_opt, SVM_model] = Build_RO_SVM(tr_data, tr_label, tr_without_v_data, tr_without_v_label, v_data, v_label, nclass,rejectionRate_thr); 
+
+    [reject_index, stage1_predict_ts] = Stage1_Classification(t_opt,SVM_model,tr_data, tr_label, ts_data, ts_label, nclass);
    
-    acc1 = length(find(stage1_predict_label == total_label(ts_idx)))/length(total_label(ts_idx));
+    acc1 = length(find(stage1_predict_ts == total_label(ts_idx)))/length(total_label(ts_idx));
     fprintf('Stage 1 Round: %d, Accuracy: %.4f\n', ii, acc1);
     
     
-    [stage2_predic_ts, stage2_predict_reject] = Stage2_Classification(total_data, total_label, tr_idx, ts_idx, reject_index);
+    [stage2_predict_ts, stage2_predict_reject] = Stage2_Classification(total_data, total_label, tr_idx, ts_idx, reject_index);
     acc2 = length(find(stage2_predict_ts == total_label(ts_idx)))/length(total_label(ts_idx));
     fprintf('Stage 2 Round: %d, Accuracy: %.4f\n', ii, acc2);
     
@@ -181,4 +110,3 @@ for ii = 1:nRounds
 end
 
 pause;
-
