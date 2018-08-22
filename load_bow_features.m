@@ -1,4 +1,4 @@
-function [total_data, total_label, nclass, fdatabase_bow] = load_bow_features(database, bow_fea_dir, noFeature, noData)
+function [total_data, total_label, nclass, clabel, fdatabase_bow] = load_bow_features(database, bow_fea_dir, genFeature, genData)
 
 %******Param settings***************
 knn = 5;
@@ -20,7 +20,7 @@ fdatabase_bow = struct;
 fdatabase_bow.path = cell(nFea, 1);         % path for each image feature
 fdatabase_bow.label = zeros(nFea, 1);       % class label for each image feature
 
-if(noFeature) % True: Build BoW model from SIFT features; False: Load saved BoW model;
+if(genFeature) % True: Build BoW model from SIFT features; False: Load saved BoW model;
     
     for iter1 = 1:nFea
         if ~mod(iter1, 5),
@@ -59,7 +59,7 @@ end
 clabel = unique(fdatabase_bow.label);   % Class labels
 nclass = length(clabel);            % # of classes
 %**************Start experiments**************************
-if (noData)  % True: Need to fetch saved BoW features from folders. False: use the saved .mat file to read BoW features.
+if (genData)  % True: Need to fetch saved BoW features from folders. False: use the saved .mat file to read BoW features.
     
     total_data = [];
     total_label = [];

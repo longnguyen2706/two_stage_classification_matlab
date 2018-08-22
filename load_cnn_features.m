@@ -1,4 +1,4 @@
-function [total_data, total_label, nclass, fdatabase_cnn] = load_cnn_features(database, cnn_fea_dir)
+function [total_data, total_label, nclass, clabel, fdatabase_cnn] = load_cnn_features(database, cnn_fea_dir)
 	nFea = length(database.path);       % Number of images
 	fdatabase_cnn = struct;
 	fdatabase_cnn.path = cell(nFea, 1);         % path for each image feature

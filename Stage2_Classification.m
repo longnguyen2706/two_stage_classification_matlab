@@ -8,10 +8,8 @@ addpath('liblinear-2.1\liblinear-2.1\matlab');
 nclass = length(unique(total_label));
 
 %**********************************
-ts_data = total_data(ts_idx,:);
-ts_label = total_label(ts_idx, :);
-tr_data = total_data(tr_idx,:);
-tr_label = total_label(tr_idx,:);
+[tr_data, tr_label] = label_data_from_idx(total_data, total_label, tr_idx);
+[ts_data, ts_label] = label_data_from_idx(total_data, total_label, ts_idx);
     
 options = ['-C -s 2'];
 model2 = train(double(tr_label), sparse(tr_data), options);
