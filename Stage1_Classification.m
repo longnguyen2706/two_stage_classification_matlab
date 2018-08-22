@@ -1,4 +1,4 @@
-function [reject_index,stage1_predict_label] = Stage1_Classification(t_opt,SVM_model,total_data,total_label,tr_idx,ts_idx)
+function [reject_index,stage1_predict_label] = Stage1_Classification(t_opt,SVM_model,tr_data, tr_label, ts_data, ts_label)
 
 %********Package********************
 addpath('liblinear-2.1\liblinear-2.1\matlab'); 
@@ -8,12 +8,6 @@ addpath('liblinear-2.1\liblinear-2.1\matlab');
 nclass = length(unique(total_label));
 
 %**********************************
-    ts_data = total_data(ts_idx,:);
-    tr_data = total_data(tr_idx,:);
-    tr_label = total_label(tr_idx,:);
-    
-    
-%
   score_acc = [];
     for iter = 1:size(SVM_model.w,1)
 

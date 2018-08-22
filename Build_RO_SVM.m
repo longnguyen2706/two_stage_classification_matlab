@@ -1,42 +1,9 @@
-function [t_opt model] = Build_RO_SVM(total_data,total_label,tr_idx)
+function [t_opt model] = Build_RO_SVM(tr_data, tr_label, tr_without_v_data, tr_without_v_label, v_data, v_label, rejectionRate_thr)
 
 %*******Package****************
 addpath('liblinear-2.1\liblinear-2.1\matlab'); 
 
-%********Parameters************
-validation_ratio = 0.25;
-nclass = length(unique(total_label));
-rejectionRate_thr = 0.2;
 
-%****************************
-
-%********training data*****************
-
-tr_data = total_data(tr_idx,:);
-tr_label = total_label(tr_idx,:);
-
-%*******Generate validation data and training data without validation data
-
-v_idx = [];
-tr_without_v_idx = [];
-
- for jj = 1:nclass,
-        idx_label = find(tr_label == jj);
-        num = length(idx_label);
-        
-        validation_num = floor(num*validation_ratio);
-        idx_rand = randperm(num);
-        
-        v_idx = [v_idx; idx_label(idx_rand(1:validation_num))];
-        tr_without_v_idx = [tr_without_v_idx; idx_label(idx_rand(validation_num+1:end))];
- end
- 
- tr_without_v_data = tr_data(tr_without_v_idx,:);
- tr_without_v_label = tr_label(tr_without_v_idx);
- 
- v_data = tr_data(v_idx,:);
- v_label = tr_label(v_idx,:);
- 
 %*******************discriminative score calculation**********************
 
     options = ['-C -s 2'];
