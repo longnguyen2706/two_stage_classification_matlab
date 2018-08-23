@@ -1,15 +1,15 @@
 % SIFT + BoW + RO-SVM Script
 
 clear all;close all;clc;
-nRounds = 1;    % # of experiments
+nRounds = 30;    % # of experiments
 validation_ratio = 0.25;  
 
 
 tr_ratio = 0.8;                     % Training image ratio, e.g., 80%
- rejectionRate_thr = 0.1;
-    
-genFeature = false;                % True: Build BoW model from SIFT features; False: Load saved BoW model;
-genData = false;                   % True: Need to fetch saved BoW features from folders. False: use the saved .mat file to read BoW features. 
+ rejectionRate_thr = 0.3;
+
+ genFeature = true;                % True: Build BoW model from SIFT features; False: Load saved BoW model;
+genData = true;                 % True: Need to fetch saved BoW features from folders. False: use the saved .mat file to read BoW features. 
 
 %*******SVM?Package? Liblinear *********************
 
@@ -42,6 +42,9 @@ nclass = nclass_s1;
 clabel = clabel_s1;
 fdatabase = fdatabase_s1;
 
+all_acc_s1 = [];
+all_acc_s2 = [];
+all_acc_2_stage = [];
 for ii = 1:nRounds
     fprintf('Round: %d...\n', ii);
     
@@ -104,7 +107,24 @@ for ii = 1:nRounds
     end 
     two_stage_acc = length(find(two_stage_predict_ts == total_label(ts_idx)))/length(total_label(ts_idx));
     fprintf('2 stage Round: %d, Accuracy: %.4f\n', ii, two_stage_acc);
-%     acc_all = [acc_all; acc]; % Record each round of the results of Stage 1 on all the test samples
+    
+    all_acc_s1 = [all_acc_s1; acc_s1];
+    all_acc_s2 = [all_acc_s2; acc_s2];
+    all_acc_2_stage = [all_acc_2_stage; two_stage_acc]; % Record each round of the results of Stage 1 on all the test samples
+
 end
+avg_acc_s1 = mean(all_acc_s1);
+std_acc_s1 = std(all_acc_s1);
+
+avg_acc_s2 = mean(all_acc_s2);
+std_acc_s2 = std(all_acc_s2);
+
+avg_acc_2_stage = mean(all_acc_2_stage);
+std_acc_2_stage = std(all_acc_2_stage);
+
+fprintf('Stage 1 Avg, std acc %.4f %.4f \n',avg_acc_s1, std_acc_s1);
+fprintf('Stage 2 Avg, std acc %.4f %.4f \n',avg_acc_s2, std_acc_s2);
+fprintf('2 stage Avg, std acc %.4f %.4f \n',avg_acc_2_stage, std_acc_2_stage);
+
 
 
