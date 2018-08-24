@@ -1,12 +1,12 @@
-function [t_opt, model] = Build_RO_SVM(total_data, total_label, tr_idx, ts_idx, tr_without_v_idx, v_idx, nclass,rejectionRate_thr)
+function [t_opt] = Build_RO_SVM(total_data, total_label, tr_without_v_idx, v_idx, nclass,rejectionRate_thr)
 
 %*******Package****************
 addpath('liblinear-2.1\liblinear-2.1\matlab'); 
 
 
 %*******************discriminative score calculation**********************
-[tr_data, tr_label] = label_data_from_idx(total_data, total_label, tr_idx);
-[ts_data, ts_label] = label_data_from_idx(total_data, total_label, ts_idx);
+%[tr_data, tr_label] = label_data_from_idx(total_data, total_label, tr_idx);
+%[ts_data, ts_label] = label_data_from_idx(total_data, total_label, ts_idx);
 [tr_without_v_data, tr_without_v_label] = label_data_from_idx(total_data, total_label, tr_without_v_idx);
 [v_data, v_label] = label_data_from_idx(total_data, total_label, v_idx);
 
@@ -47,7 +47,7 @@ addpath('liblinear-2.1\liblinear-2.1\matlab');
 
 centroid_all = [];
 for jj = 1:nclass
-    class_data = tr_data(tr_label == jj,:);
+    class_data = tr_without_v_data(tr_without_v_label == jj,:);
     centroid_all = [centroid_all; mean(class_data,1)];
 end
 
@@ -115,7 +115,7 @@ error_svm_t_accumulate_v = [error_svm_t_accumulate_v;error_svm_t];
 else
   acc_svm_t_accumulate_v = [acc_svm_t_accumulate_v;1];
 reject_svm_t_accumulate_v = [reject_svm_t_accumulate_v;1];
-error_svm_t_accumulate_v = [error_svm_t_accumulate_v;0];  
+error_svm_t_accumulate_v = [error_svm_t_accumulate_v;0]; 
 
 end
 gndacc_svm_t_accumulate_v = [gndacc_svm_t_accumulate_v;acc_svm];
@@ -142,8 +142,8 @@ x2 = T(b(1));
 
 t_opt = x2-(x2-x1)*(y1-rejectionRate_thr)/(y1-y2);
 % t_opt = (x1+x2)/2;
-options = ['-C -s 2'];
-model = train(double(tr_label), sparse(tr_data), options);
-options = ['-c ',num2str(model(1)),' -s 2'];
-model = train(double(tr_label), sparse(tr_data), options);
+%options = ['-C -s 2'];
+%model = train(double(tr_label), sparse(tr_data), options);
+%options = ['-c ',num2str(model(1)),' -s 2'];
+%model = train(double(tr_label), sparse(tr_data), options);
 end
