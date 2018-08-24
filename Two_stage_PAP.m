@@ -5,8 +5,8 @@ nRounds = 3;    % # of experiments
 validation_ratio = 0.25;
 tr_ratio = 0.8;                     % Training image ratio, e.g., 80%
 rejectionRates= 0.05:0.2:0.5;
-genFeature = false;                % True: Build BoW model from SIFT features; False: Load saved BoW model;
-genData = false;                 % True: Need to fetch saved BoW features from folders. False: use the saved .mat file to read BoW features.
+genFeature = true;                % True: Build BoW model from SIFT features; False: Load saved BoW model;
+genData = true;                 % True: Need to fetch saved BoW features from folders. False: use the saved .mat file to read BoW features.
 
 %*******SVM?Package? Liblinear *********************
 
@@ -14,10 +14,11 @@ addpath('liblinear-2.1\liblinear-2.1\matlab');
 
 %*******Directories*******************
 
-img_dir = 'image/PAP';       % directory for the image database
-data_dir = 'data/PAP';       % directory for saving SIFT descriptors
-bow_fea_dir = 'gen_feature_matlab/bow/PAP';    % directory for saving BoW features
-cnn_fea_dir = 'gen_feature_matlab/cnn/PAP';
+img_dir = 'image/Hep';       % directory for the image database
+data_dir = 'data/Hep';       % directory for saving SIFT descriptors
+bow_fea_dir = 'gen_feature_matlab/bow/Hep';    % directory for saving BoW features
+cnn_fea_dir = 'gen_feature_matlab/cnn/Hep';
+Bpath = ['dictionary/dictionary_1000_Hep.mat'];
 % retrieve the directory of the database and load the codebook
 database = retr_database_dir(data_dir);
 
@@ -27,7 +28,7 @@ end
 
 %****************************************
 
-[total_data_s1, total_label_s1, nclass_s1, clabel_s1, fdatabase_s1] = load_bow_features(database, bow_fea_dir, genFeature, genData);
+[total_data_s1, total_label_s1, nclass_s1, clabel_s1, fdatabase_s1] = load_bow_features(database, bow_fea_dir, genFeature, genData, Bpath);
 [total_data_s2, total_label_s2, nclass_s2, clabel_s2, fdatabase_s2] = load_cnn_features(database, cnn_fea_dir);
 
 fprintf ('nclass1, nclass2 %d %d \n', nclass_s1, nclass_s2);

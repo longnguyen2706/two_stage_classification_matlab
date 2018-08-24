@@ -1,11 +1,10 @@
-function [total_data, total_label, nclass, clabel, fdatabase_bow] = load_bow_features(database, bow_fea_dir, genFeature, genData)
+function [total_data, total_label, nclass, clabel, fdatabase_bow] = load_bow_features(database, bow_fea_dir, genFeature, genData, Bpath)
 
 %******Param settings***************
 knn = 5;
 pyramid = [1,2,4];
 
 %******Load a BoW dictionary**********************
-Bpath = ['dictionary/dictionary_1000_PAP.mat'];
 load(Bpath);
 B = dictionary';
 nCodebook = size(B, 2);
