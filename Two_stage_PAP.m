@@ -96,7 +96,6 @@ for ii = 1:nRounds
     acc_s1 = length(find(stage1_predict_ts == total_label(ts_idx)))/length(total_label(ts_idx));
     fprintf('Stage 1 Round: %d, Accuracy: %.4f\n', ii, acc_s1);
     
-    
     [stage2_predict_ts, stage2_predict_reject] = Stage2_Classification(total_data_s2, total_label_s2, tr_idx, ts_idx, reject_index);
     acc_s2 = length(find(stage2_predict_ts == total_label(ts_idx)))/length(total_label(ts_idx));
     fprintf('Stage 2 Round: %d, Accuracy: %.4f\n', ii, acc_s2);
