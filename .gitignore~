@@ -2,5 +2,7 @@ data/
 dictionary/
 features/
 generated_features/
+gen_feature_matlab/
 image/
 liblinear-2.1/
+*.mat

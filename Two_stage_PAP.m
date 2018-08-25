@@ -1,7 +1,7 @@
 % SIFT + BoW + RO-SVM Script
 
 clear all;close all;clc;
-nRounds = 3;    % # of experiments
+nRounds = 30;    % # of experiments
 validation_ratio = 0.25;
 tr_ratio = 0.8;                     % Training image ratio, e.g., 80%
 rejectionRates= 0.05:0.2:0.5;
@@ -14,11 +14,11 @@ addpath('liblinear-2.1\liblinear-2.1\matlab');
 
 %*******Directories*******************
 
-img_dir = 'image/Hep';       % directory for the image database
-data_dir = 'data/Hep';       % directory for saving SIFT descriptors
-bow_fea_dir = 'gen_feature_matlab/bow/Hep';    % directory for saving BoW features
-cnn_fea_dir = 'gen_feature_matlab/cnn/Hep';
-Bpath = ['dictionary/dictionary_1000_Hep.mat'];
+img_dir = 'image/PAP';       % directory for the image database
+data_dir = 'data/PAP';       % directory for saving SIFT descriptors
+bow_fea_dir = 'gen_feature_matlab/bow/PAP';    % directory for saving BoW features
+cnn_fea_dir = 'gen_feature_matlab/cnn/PAP';
+Bpath = ['dictionary/dictionary_1000_PAP.mat'];
 % retrieve the directory of the database and load the codebook
 database = retr_database_dir(data_dir);
 
