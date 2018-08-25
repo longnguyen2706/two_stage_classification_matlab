@@ -5,7 +5,7 @@ knn = 5;
 pyramid = [1,2,4];
 
 %******Load a BoW dictionary**********************
-Bpath = ['dictionary/dictionary_1000_PAP.mat'];
+Bpath = ['dictionary/dictionary_1000_Hep.mat'];
 load(Bpath);
 B = dictionary';
 nCodebook = size(B, 2);

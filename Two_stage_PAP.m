@@ -6,7 +6,7 @@ validation_ratio = 0.25;
 
 
 tr_ratio = 0.8;                     % Training image ratio, e.g., 80%
- rejectionRate_thr = 0.3;
+ rejectionRate_thr = 0.15;
 
  genFeature = true;                % True: Build BoW model from SIFT features; False: Load saved BoW model;
 genData = true;                 % True: Need to fetch saved BoW features from folders. False: use the saved .mat file to read BoW features. 
@@ -17,10 +17,10 @@ addpath('liblinear-2.1\liblinear-2.1\matlab');
 
 %*******Directories*******************
 
-img_dir = 'image/PAP';       % directory for the image database                             
-data_dir = 'data/PAP';       % directory for saving SIFT descriptors
-bow_fea_dir = 'gen_feature_matlab/bow/PAP';    % directory for saving BoW features
-cnn_fea_dir = 'gen_feature_matlab/cnn/PAP';
+img_dir = 'image/Hep';       % directory for the image database                             
+data_dir = 'data/Hep';       % directory for saving SIFT descriptors
+bow_fea_dir = 'gen_feature_matlab/bow/Hep';    % directory for saving BoW features
+cnn_fea_dir = 'gen_feature_matlab/cnn/Hep';
 % retrieve the directory of the database and load the codebook
 database = retr_database_dir(data_dir);
 

@@ -7,8 +7,13 @@ addpath('liblinear-2.1\liblinear-2.1\matlab');
 %*******************discriminative score calculation**********************
 [tr_data, tr_label] = label_data_from_idx(total_data, total_label, tr_idx);
 [ts_data, ts_label] = label_data_from_idx(total_data, total_label, ts_idx);
-[tr_without_v_data, tr_without_v_label] = label_data_from_idx(total_data, total_label, tr_without_v_idx);
-[v_data, v_label] = label_data_from_idx(total_data, total_label, v_idx);
+% [tr_without_v_data, tr_without_v_label] = label_data_from_idx(total_data, total_label, tr_without_v_idx);
+% [v_data, v_label] = label_data_from_idx(total_data, total_label, v_idx);
+ tr_without_v_data = tr_data(tr_without_v_idx,:);
+ tr_without_v_label = tr_label(tr_without_v_idx);
+ 
+ v_data = tr_data(v_idx,:);
+ v_label = tr_label(v_idx,:);
 
     options = ['-C -s 2'];
     model = train(double(tr_without_v_label), sparse(tr_without_v_data), options);
