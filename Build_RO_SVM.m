@@ -1,4 +1,4 @@
-function [t_opt, model] = Build_RO_SVM(total_data, total_label, tr_idx, ts_idx, tr_without_v_idx, v_idx, nclass,rejectionRate_thr)
+function [t_opt, model] = Build_RO_SVM(total_data, total_label, tr_idx, ts_idx, tr_without_v_idx, v_idx, nclass,rejectionRate_thr, fid)
 
 %*******Package****************
 addpath('liblinear-2.1\liblinear-2.1\matlab'); 

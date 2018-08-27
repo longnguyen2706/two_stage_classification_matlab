@@ -1,4 +1,4 @@
-function [reject_index,stage1_predict_label] = Stage1_Classification(t_opt,SVM_model,total_data, total_label, tr_idx, ts_idx,nclass)
+function [reject_index,stage1_predict_label] = Stage1_Classification(t_opt,SVM_model,total_data, total_label, tr_idx, ts_idx,nclass, fid)
 
 %********Package********************
 addpath('liblinear-2.1\liblinear-2.1\matlab'); 

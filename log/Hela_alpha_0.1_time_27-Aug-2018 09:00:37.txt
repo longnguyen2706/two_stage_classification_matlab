@@ -1,0 +1,6 @@
+image dir: image/Hela
+rejection rate: 0.1000
+nclass1, nclass2 10 10 
+Round: 1...
+Training number: 685
+Testing number:177

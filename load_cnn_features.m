@@ -1,4 +1,4 @@
-function [total_data, total_label, nclass, clabel, fdatabase_cnn] = load_cnn_features(database, cnn_fea_dir)
+function [total_data, total_label, nclass, clabel, fdatabase_cnn] = load_cnn_features(database, cnn_fea_dir, dataset)
 	nFea = length(database.path);       % Number of images
 	fdatabase_cnn = struct;
 	fdatabase_cnn.path = cell(nFea, 1);         % path for each image feature
@@ -23,7 +23,7 @@ function [total_data, total_label, nclass, clabel, fdatabase_cnn] = load_cnn_fea
 		fdatabase_cnn.label(iter1) = flabel;
 		fdatabase_cnn.path{iter1} = feaPath;
 	end 
-	save('FeaInfo_cnn_PAP.mat','fdatabase_cnn','fdatabase_cnn');
+	save(strcat('FeaInfo_cnn_',dataset, '.mat'),'fdatabase_cnn','fdatabase_cnn');
 
 	clabel = unique(fdatabase_cnn.label);   % Class labels
 	nclass = length(clabel);            % # of classes

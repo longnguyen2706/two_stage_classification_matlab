@@ -1,4 +1,4 @@
-function [stage2_predict_ts, stage2_predict_reject] = Stage2_Classification(total_data, total_label, tr_idx, ts_idx, reject_index)
+function [stage2_predict_ts, stage2_predict_reject] = Stage2_Classification(total_data, total_label, tr_idx, ts_idx, reject_index, fid)
 
 %********Package********************
 addpath('liblinear-2.1\liblinear-2.1\matlab'); 

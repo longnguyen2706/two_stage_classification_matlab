@@ -1,11 +1,10 @@
-function [total_data, total_label, nclass, clabel, fdatabase_bow] = load_bow_features(database, bow_fea_dir, genFeature, genData)
+function [total_data, total_label, nclass, clabel, fdatabase_bow] = load_bow_features(database, bow_fea_dir, genFeature, genData, Bpath, dataset)
 
 %******Param settings***************
 knn = 5;
 pyramid = [1,2,4];
 
 %******Load a BoW dictionary**********************
-Bpath = ['dictionary/dictionary_1000_Hep.mat'];
 load(Bpath);
 B = dictionary';
 nCodebook = size(B, 2);
@@ -51,9 +50,9 @@ if(genFeature) % True: Build BoW model from SIFT features; False: Load saved BoW
         fdatabase_bow.path{iter1} = feaPath;
     end
     
-    save('FeaInfo_bow_PAP.mat','fdatabase_bow','fdatabase_bow');
+    save(strcat('FeaInfo_bow_',dataset, '.mat'),'fdatabase_bow','fdatabase_bow');
 else
-    load('FeaInfo_bow_PAP.mat');
+    load(strcat('FeaInfo_bow_',dataset, '.mat'));
 end
 
 clabel = unique(fdatabase_bow.label);   % Class labels
